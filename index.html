@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pagination.netlify-app</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="Pagination.css">
+    </head>
+    <body class="m-0 p-0">
+        <div class="heading">
+            <h1 class="text-center">Pagination</h1>
+            <div class="d-flex justify-content-center">
+                <span class="bg-primary" style="height:5px;width:100px;"></span>
+            </div>
+        </div>    
+        <div class="container">
+            <div class="cont"></div>
+            <div class="btn-cont d-flex justify-content-center my-5 px-3"></div>
+        </div>
+        <script>
+
+            let cont=document.querySelector('.cont');
+            let btnCont=document.querySelector('.btn-cont');
+            const url = 'https://api.github.com/users/john-smilga/followers?per_page=100';
+            let arr;
+            let boxs;
+            let i=0;
+            fetch(url).then(item=>item.json()).then(item=>{
+                arr=item;
+                let itemPerPage=10;
+                let NumberOfPages=Math.ceil(arr.length/itemPerPage);
+                handleMaxBoxes(i);    
+                btnCont.insertAdjacentHTML('beforeend',`
+                    <button class="prev border-0 bg-transparent fw-bold">Prev</button>
+                    <div class="btn-boxs mx-3 row gap-3"></div>
+                    <button class="next border-0 bg-transparent fw-bold">Next</button>
+                `)
+                for(let i=0;i<NumberOfPages;i++){
+                    btnCont.querySelector('.btn-boxs').insertAdjacentHTML('beforeend',`
+                        <div class="text-center bg-primary rounded col-auto" data-index=${i}>${i+1}</div>
+                    `)
+                }
+                let btnBoxsDiv=btnCont.querySelector('.btn-boxs').children;
+                btnBoxsDiv[0].classList.add('btnClrChng');
+            });
+
+            function handleMaxBoxes(i){
+                itemPerPage=10;
+                let start=i*itemPerPage;
+                let newArr=arr.slice(start,start+itemPerPage);
+                cont.innerHTML='';
+                newArr.map(item=>{
+                cont.insertAdjacentHTML('beforeend',`
+                    <div class="box rounded-3 bg-light text-center">
+                        <img class="rounded-circle " src=${item.avatar_url}>
+                        <h6 class="mt-3 text-capitalize" style="color: gray;">${item.login}</h6>
+                        <a href=${item.html_url} class="btn-sm bg-primary text-light text-uppercase text-decoration-none rounded-pill py-2 px-4">View profile</a>
+                    </div>`
+                )
+                });         
+            }
+        // +++++++++++++++++ click on bttons to chng page
+
+        btnCont.onclick=function(e){
+            btnBoxsDiv=btnCont.querySelector('.btn-boxs').children
+            if(e.target.hasAttribute('data-index')){
+                i=e.target.dataset.index;
+            }
+            else if(e.target.classList.contains('prev')){
+                i--
+                if(i<0){i=9}
+            }
+            else if(e.target.classList.contains('next')){
+                i++
+                if(i>=10){i=0}
+            }
+            Array.from(btnBoxsDiv).forEach(item=>item.classList.remove('btnClrChng'));
+            btnBoxsDiv[i].classList.add('btnClrChng');
+            handleMaxBoxes(i);
+        }
+
+// ++++++++ on page load when take time show loading...
+        //tried but  not working for java load
+
+</script>
+    </body>
+</html>

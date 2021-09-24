@@ -1,0 +1,10 @@
+body{background-color: #cce0ff;}
+.heading h1{font-size: 3.5em;}
+.heading{padding:2.8em 0;}
+.box img{width:130px;}
+.box{padding:2em 0;}
+.box h6{margin-bottom:1.6em;}
+.box a{cursor: pointer;}
+.cont{display: grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.7em;}
+.btn-boxs div{padding: .2em .8em;cursor: pointer;}
+.btnClrChng{background-color: darkslateblue !important;color: white;}
